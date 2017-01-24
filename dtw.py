@@ -60,4 +60,4 @@ def get_top_n_similar_stocks(stock_name, n, distance_matrix):
     sorted_stocks = sorted(candidate_stocks.items(), key=operator.itemgetter(1))
     if n > len(candidate_stocks):
         raise("lech ala kush shela ima shelcha!")
-    return sorted_stocks[:n]
+    return dict(sorted_stocks[:n])

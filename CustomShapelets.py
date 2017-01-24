@@ -16,13 +16,13 @@ import matplotlib.pyplot as plt
 #         shapelet_dict[_class] = find_shapelets_bf(transformed_data, max_len=max_len, min_len=min_len, plot=0, verbose=1)
 #     return shapelet_dict
 
-def generate_candidates(data, max_len=5, min_len=2):
-    candidates, l = [], max_len
-    while l >= min_len:
+def generate_candidates(data, max_len=5, min_len=3):
+    candidates, current_len = [], max_len
+    while current_len >= min_len:
         for i in range(len(data)):
             time_serie = data[i][0]
-            for k in range(len(time_serie)-l+1): candidates.append(time_serie[k:k+l])
-        l -= 1
+            for k in range(len(time_serie)-current_len+1): candidates.append(time_serie[k:k+current_len])
+        current_len -= 1
     return candidates
 
 
@@ -78,25 +78,25 @@ def subsequence_dist(time_serie, sub_serie):
         min_dist, min_idx = float("inf"), 0
         for i in range(len(time_serie)-len(sub_serie)+1):
             dist = manhattan_distance(sub_serie, time_serie[i:i+len(sub_serie)], min_dist)
-            if dist is not None and dist < min_dist: min_dist, min_idx = dist, i
+            if dist is not None and dist < min_dist:
+                min_dist, min_idx = dist, i
         return min_dist, min_idx
     else:
         return None, None
 
-time_sries_mapping = {}
+#time_sries_mapping = {}
 
-def extract_shapelet_features(data, max_len=5, min_len=3, plot=True, verbose=True):
-    training_data = {}
+def extract_shapelet_features(ts_data, candidates, plot=True, verbose=True):
+    ts_feature_data = {}
     shapelet_mapping = {}
-    candidates = generate_candidates(data, max_len, min_len)
-    for idx, candidate in enumerate(candidates):
-        if idx not in shapelet_mapping.keys():
-            shapelet_mapping[idx] = candidate
-        for index, entry in enumerate(data):
-            if index not in time_sries_mapping.keys():
-                time_sries_mapping[index] = entry[0]
-            if index not in training_data.keys():
-                training_data[index] = []
-            d, _ = subsequence_dist(entry[0], candidate)
-            training_data[index].append(d)
-    return training_data, shapelet_mapping
+    for candidate_idx, candidate in enumerate(candidates):
+        #if candidate_idx not in shapelet_mapping.keys():
+        #    shapelet_mapping[candidate_idx] = candidate
+        for ts_idx, ts in enumerate(ts_data):
+            #if index not in time_sries_mapping.keys():
+            #    time_sries_mapping[index] = entry[0]
+            if ts_idx not in ts_feature_data.keys():
+                ts_feature_data[ts_idx] = []
+            d, _ = subsequence_dist(ts[0], candidate)
+            ts_feature_data[ts_idx].append(d)
+    return ts_feature_data.values()#, shapelet_mapping
