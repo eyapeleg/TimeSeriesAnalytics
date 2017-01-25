@@ -5,3 +5,4 @@ class ModelNames(object):
     CONTINUOUS_BASELINE = "continuous_baseline"
     CATEGORICAL_BASELINE = "categorical_baseline"
     RANDOM_FOREST = "random_forest"
+    LOGISTIC_REGRESSION = "logistic_regression"

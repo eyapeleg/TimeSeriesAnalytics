@@ -7,7 +7,7 @@ class CategoricalBaselineModel:
         self.y_mode = None
 
     def fit(self, x_data, y_train_data):
-        self.y_mode = y_train_data.value_counts().idxmax()
+        self.y_mode = pd.Series(y_train_data).value_counts().idxmax()
         return self
 
     def predict(self, x_data):
